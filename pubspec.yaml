@@ -42,6 +42,8 @@ dependencies:
   flutter_bloc: ^9.1.1
   flutter_svg: ^2.5.0
   flutter_dotenv: ^6.0.2
+  native_dialog_plus: ^1.1.2
+  crypto: ^3.0.8
 
 dev_dependencies:
   flutter_test:

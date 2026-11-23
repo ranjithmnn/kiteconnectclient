@@ -1,3 +1,11 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:kiteconnectclient/constants/endpoints.dart';
+import 'package:kiteconnectclient/utils/widgets/app_snackbar.dart';
+import 'package:kiteconnectclient/utils/widgets/dialog.dart';
+import 'package:kiteconnectclient/utils/widgets/webview.dart';
+import 'package:kiteconnectclient/view/auth/bloc/auth_bloc.dart';
+import 'package:kiteconnectclient/view/home/home_view.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -16,13 +24,42 @@ class LoginView extends StatelessWidget {
               const Spacer(flex: 2),
               const _HeaderSection(),
               const SizedBox(height: 36),
-              _PrimaryButton(label: "Login with Zerodha", onPressed: () {}),
+              _loginBtn(),
               const SizedBox(height: 12),
               const Spacer(flex: 3),
               const _FooterSection(),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  BlocProvider<AuthBloc> _loginBtn() {
+    return BlocProvider(
+      create: (_) => AuthBloc(),
+      child: BlocConsumer<AuthBloc, AuthState>(
+        listener: (context, state) {
+          if (state is AuthError) {
+            DialogUtil.showSimpleDialog(context, "Error", state.message);
+          } else if (state is AuthSuccess) {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (_) => const HomeView()),
+            );
+          }
+        },
+        builder: (context, state) {
+          final isLoading = state is AuthLoading;
+          return _PrimaryButton(
+            label: "Login with Zerodha",
+            isLoading: isLoading,
+            onPressed: isLoading
+                ? null
+                : () => context.read<AuthBloc>().add(
+                    AuthLoginRequested(context: context),
+                  ),
+          );
+        },
       ),
     );
   }
@@ -63,8 +100,13 @@ class _HeaderSection extends StatelessWidget {
 class _PrimaryButton extends StatelessWidget {
   final String label;
   final VoidCallback? onPressed;
+  final bool isLoading;
 
-  const _PrimaryButton({required this.label, required this.onPressed});
+  const _PrimaryButton({
+    required this.label,
+    required this.onPressed,
+    this.isLoading = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -78,10 +120,22 @@ class _PrimaryButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
         ),
-        child: Text(
-          label,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-        ),
+        child: isLoading
+            ? SizedBox(
+                height: 20,
+                width: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2.2,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
+              )
+            : Text(
+                label,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
       ),
     );
   }
