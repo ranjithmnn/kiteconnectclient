@@ -1,4 +1,4 @@
-package com.example.kiteconnectclient
+package com.kiteclient.app
 
 import io.flutter.embedding.android.FlutterActivity
 
