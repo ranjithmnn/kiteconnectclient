@@ -41,6 +41,7 @@ dependencies:
   webview_flutter: ^4.14.1
   flutter_bloc: ^9.1.1
   flutter_svg: ^2.5.0
+  flutter_dotenv: ^6.0.2
 
 dev_dependencies:
   flutter_test:
@@ -67,6 +68,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/logo/
+    - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
