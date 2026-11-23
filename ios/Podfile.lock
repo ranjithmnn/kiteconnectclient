@@ -1,0 +1,30 @@
+PODS:
+  - Flutter (1.0.0)
+  - flutter_secure_storage_darwin (10.0.0):
+    - Flutter
+    - FlutterMacOS
+  - webview_flutter_wkwebview (0.0.1):
+    - Flutter
+    - FlutterMacOS
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - flutter_secure_storage_darwin (from `.symlinks/plugins/flutter_secure_storage_darwin/darwin`)
+  - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/darwin`)
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  flutter_secure_storage_darwin:
+    :path: ".symlinks/plugins/flutter_secure_storage_darwin/darwin"
+  webview_flutter_wkwebview:
+    :path: ".symlinks/plugins/webview_flutter_wkwebview/darwin"
+
+SPEC CHECKSUMS:
+  Flutter: 71a624a5bc0c04062bf19101d501e466baf2fb47
+  flutter_secure_storage_darwin: 79a377dfb00a246ccab2c64fe79d4d78c89e0fbc
+  webview_flutter_wkwebview: 29eb20d43355b48fe7d07113835b9128f84e3af4
+
+PODFILE CHECKSUM: ba0d7af98d1a0db7cbf744edd0331fd4de934cd6
+
+COCOAPODS: 1.16.2
