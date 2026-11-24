@@ -1,9 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:kiteconnectclient/constants/endpoints.dart';
-import 'package:kiteconnectclient/utils/widgets/app_snackbar.dart';
 import 'package:kiteconnectclient/utils/widgets/dialog.dart';
-import 'package:kiteconnectclient/utils/widgets/webview.dart';
 import 'package:kiteconnectclient/view/auth/bloc/auth_bloc.dart';
 import 'package:kiteconnectclient/view/home/home_view.dart';
 import 'package:material_ui/material_ui.dart';
