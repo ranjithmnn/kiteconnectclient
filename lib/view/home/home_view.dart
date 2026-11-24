@@ -10,16 +10,13 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => HomeBloc()..add(const HomeProfileRequested()),
-      child: Scaffold(
-        body: SafeArea(
-          bottom: false,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Column(
-              children: [_customHomeAppBar()],
-            ),
+    return Scaffold(
+      body: SafeArea(
+        bottom: false,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          child: Column(
+            children: [_customHomeAppBar()],
           ),
         ),
       ),
@@ -43,15 +40,12 @@ class HomeView extends StatelessWidget {
   );
 
   void _handleProfileClick(BuildContext context) {
-    final homeBloc = context.read<HomeBloc>();
+    final height = MediaQuery.of(context).size.height * 0.5;
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (_) => BlocProvider.value(
-        value: homeBloc,
-        child: const ProfileView(),
-      ),
+      constraints: BoxConstraints(minHeight: height, maxHeight: height),
+      builder: (_) => const ProfileView(),
     );
   }
 }

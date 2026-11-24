@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiteconnectclient/utils/widgets/dialog.dart';
 import 'package:kiteconnectclient/utils/widgets/primary_button.dart';
 import 'package:kiteconnectclient/view/auth/bloc/auth_bloc.dart';
+import 'package:kiteconnectclient/view/home/bloc/home_bloc.dart';
 import 'package:kiteconnectclient/view/home/home_view.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -40,6 +41,7 @@ class LoginView extends StatelessWidget {
           if (state is AuthError) {
             DialogUtil.showSimpleDialog(context, "Error", state.message);
           } else if (state is AuthSuccess) {
+            context.read<HomeBloc>().add(const HomeProfileRequested());
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (_) => const HomeView()),
             );
