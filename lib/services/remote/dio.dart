@@ -1,8 +1,10 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:kiteconnectclient/constants/endpoints.dart';
+import 'package:kiteconnectclient/services/navigation_service.dart';
+import 'package:kiteconnectclient/view/auth/login_view.dart';
 
 enum HttpMethod { get, post, put, delete, patch }
 
@@ -34,9 +36,18 @@ class DioClient {
           if (requiresAuth) {
             final accessToken = await _storage.read(key: 'access_token');
             final apiKey = dotenv.maybeGet('API_KEY');
-            if (apiKey != null &&
-                accessToken != null &&
-                accessToken.isNotEmpty) {
+            if (accessToken == null || accessToken.isEmpty) {
+              await _handleSessionExpired();
+              handler.reject(
+                DioException(
+                  requestOptions: options,
+                  type: DioExceptionType.cancel,
+                  message: 'Session expired. Please log in again.',
+                ),
+              );
+              return;
+            }
+            if (apiKey != null && apiKey.isNotEmpty) {
               options.headers['Authorization'] = 'token $apiKey:$accessToken';
             }
           }
@@ -49,11 +60,16 @@ class DioClient {
           );
           handler.next(response);
         },
-        onError: (error, handler) {
+        onError: (error, handler) async {
           debugPrint(
             '[DIO ERROR] ${error.response?.statusCode} '
             '${error.requestOptions.uri}: ${error.message}',
           );
+          final requiresAuth =
+              error.requestOptions.extra['requiresAuth'] as bool? ?? true;
+          if (requiresAuth && _isSessionExpired(error)) {
+            await _handleSessionExpired();
+          }
           handler.next(error);
         },
       ),
@@ -64,6 +80,35 @@ class DioClient {
 
   late final Dio _dio;
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
+  bool _isHandlingSessionExpiry = false;
+
+  bool _isSessionExpired(DioException error) {
+    final statusCode = error.response?.statusCode;
+    if (statusCode == 401 || statusCode == 403) {
+      return true;
+    }
+    final data = error.response?.data;
+    if (data is Map<String, dynamic> && data['error_type'] == 'TokenException') {
+      return true;
+    }
+    return false;
+  }
+
+  Future<void> _handleSessionExpired() async {
+    if (_isHandlingSessionExpiry) {
+      return;
+    }
+    _isHandlingSessionExpiry = true;
+    try {
+      await _storage.delete(key: 'access_token');
+      appNavigatorKey.currentState?.pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => const LoginView()),
+        (route) => false,
+      );
+    } finally {
+      _isHandlingSessionExpiry = false;
+    }
+  }
 
   Future<Map<String, dynamic>> request(
     String path, {

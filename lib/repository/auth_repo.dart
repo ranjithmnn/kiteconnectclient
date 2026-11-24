@@ -27,7 +27,7 @@ class AuthRepository {
       onUrlChange: (url) {
         debugPrint('URL changed: $url');
       },
-      shouldClose: (url) => url.startsWith('${Endpoints.redirectUrl}/success'),
+      shouldClose: (url) => url.startsWith(Endpoints.redirectUrl),
     );
 
     if (!context.mounted) {
@@ -35,7 +35,7 @@ class AuthRepository {
     }
 
     if (result == null ||
-        !result.startsWith('${Endpoints.redirectUrl}/success')) {
+        !result.startsWith(Endpoints.redirectUrl)) {
       return false;
     }
 
