@@ -16,17 +16,23 @@ class HomeView extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Column(
-            children: [_customHomeAppBar()],
+            children: [_customHomeAppBar(context)],
           ),
         ),
       ),
     );
   }
 
-  Widget _customHomeAppBar() => Row(
+  Widget _customHomeAppBar(BuildContext context) => Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
-      SvgPicture.asset('assets/logo/kite.svg', height: 20),
+      Row(
+        children: [
+          SvgPicture.asset('assets/logo/kite.svg', height: 20),
+          SizedBox(width: 8,),
+          Text('Kite', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface),)
+        ],
+      ),
       BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
           final avatarUrl = state is HomeLoaded ? state.profile.avatarUrl : null;
@@ -67,7 +73,10 @@ class _ProfileAvatar extends StatelessWidget {
       return Icon(Icons.person, color: iconColor);
     }
 
-    return ClipOval(
+    return ClipPath(
+      clipper: ShapeBorderClipper(
+        shape: MaterialShapeBorder(shape: MaterialShapes.cookie9Sided),
+      ),
       child: CachedNetworkImage(
         imageUrl: url,
         width: 30,

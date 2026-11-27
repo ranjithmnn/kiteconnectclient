@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiteconnectclient/model/user_profile.dart';
-import 'package:kiteconnectclient/utils/widgets/primary_button.dart';
 import 'package:kiteconnectclient/view/home/bloc/home_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -146,7 +145,10 @@ class _LargeAvatar extends StatelessWidget {
       return fallback();
     }
 
-    return ClipOval(
+    return ClipPath(
+      clipper: ShapeBorderClipper(
+        shape: MaterialShapeBorder(shape: MaterialShapes.cookie9Sided),
+      ),
       child: CachedNetworkImage(
         imageUrl: url,
         width: 52,
@@ -155,93 +157,6 @@ class _LargeAvatar extends StatelessWidget {
         placeholder: (_, _) => fallback(),
         errorWidget: (_, _, _) => fallback(),
       ),
-    );
-  }
-}
-
-class _InfoColumn extends StatelessWidget {
-  final String label;
-  final String value;
-
-  const _InfoColumn({required this.label, required this.value});
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = ColorScheme.of(context);
-    final textTheme = TextTheme.of(context);
-    return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            label,
-            style: textTheme.labelSmall?.copyWith(
-              color: colorScheme.onSurfaceVariant,
-            ),
-          ),
-          const SizedBox(height: 3),
-          Text(
-            value.isEmpty ? '-' : value,
-            style: textTheme.bodySmall?.copyWith(
-              color: colorScheme.onSurface,
-              fontWeight: FontWeight.w600,
-            ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _TagSection extends StatelessWidget {
-  final String label;
-  final List<String> items;
-
-  const _TagSection({required this.label, required this.items});
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = ColorScheme.of(context);
-    final textTheme = TextTheme.of(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: textTheme.labelSmall?.copyWith(
-            color: colorScheme.onSurfaceVariant,
-          ),
-        ),
-        const SizedBox(height: 6),
-        Wrap(
-          spacing: 6,
-          runSpacing: 6,
-          children: items
-              .map(
-                (item) => Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: colorScheme.secondaryContainer,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: colorScheme.outlineVariant),
-                  ),
-                  child: Text(
-                    item,
-                    style: textTheme.labelSmall?.copyWith(
-                      color: colorScheme.onSecondaryContainer,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              )
-              .toList(),
-        ),
-      ],
     );
   }
 }
