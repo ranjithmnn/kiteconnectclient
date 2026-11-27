@@ -19,11 +19,13 @@ class WebViewBottomSheet extends StatefulWidget {
     ValueChanged<String>? onUrlChange,
     bool Function(String url)? shouldClose,
   }) {
+    final colorScheme = ColorScheme.of(context);
     return showModalBottomSheet<String>(
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
       enableDrag: false,
+      backgroundColor: colorScheme.surfaceContainerLow,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
@@ -78,7 +80,10 @@ class _WebViewBottomSheetState extends State<WebViewBottomSheet> {
           Align(
             alignment: Alignment.centerRight,
             child: IconButton(
-              icon: const Icon(Icons.close),
+              icon: Icon(
+                Icons.close,
+                color: ColorScheme.of(context).onSurfaceVariant,
+              ),
               onPressed: () => Navigator.of(context).pop(_currentUrl),
             ),
           ),

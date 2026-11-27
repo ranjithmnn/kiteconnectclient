@@ -1,18 +1,35 @@
 import 'package:material_ui/material_ui.dart';
 
 enum SnackBarType {
-  success(icon: Icons.check_circle_outline_rounded, color: Color(0xFF16A34A)),
-  error(icon: Icons.error_outline_rounded, color: Color(0xFFDC2626)),
-  info(
-    icon: Icons.info_outline_rounded,
-    color: Color.fromARGB(255, 138, 142, 150),
-  ),
-  warning(icon: Icons.warning_amber_rounded, color: Color(0xFFD97706));
+  success(icon: Icons.check_circle_outline_rounded),
+  error(icon: Icons.error_outline_rounded),
+  info(icon: Icons.info_outline_rounded),
+  warning(icon: Icons.warning_amber_rounded);
 
   final IconData icon;
-  final Color color;
 
-  const SnackBarType({required this.icon, required this.color});
+  const SnackBarType({required this.icon});
+
+  (Color background, Color foreground) resolveColors(ColorScheme colorScheme) {
+    return switch (this) {
+      SnackBarType.success => (
+        colorScheme.primaryContainer,
+        colorScheme.onPrimaryContainer,
+      ),
+      SnackBarType.error => (
+        colorScheme.errorContainer,
+        colorScheme.onErrorContainer,
+      ),
+      SnackBarType.info => (
+        colorScheme.inverseSurface,
+        colorScheme.onInverseSurface,
+      ),
+      SnackBarType.warning => (
+        colorScheme.tertiaryContainer,
+        colorScheme.onTertiaryContainer,
+      ),
+    };
+  }
 }
 
 abstract final class AppSnackBar {
@@ -22,6 +39,9 @@ abstract final class AppSnackBar {
     SnackBarType type = SnackBarType.info,
     Duration duration = const Duration(seconds: 3),
   }) {
+    final colorScheme = ColorScheme.of(context);
+    final textTheme = TextTheme.of(context);
+    final (backgroundColor, foregroundColor) = type.resolveColors(colorScheme);
     final messenger = ScaffoldMessenger.of(context);
     messenger
       ..hideCurrentSnackBar()
@@ -29,16 +49,16 @@ abstract final class AppSnackBar {
         SnackBar(
           duration: duration,
           behavior: SnackBarBehavior.fixed,
-          backgroundColor: type.color,
+          backgroundColor: backgroundColor,
           content: Row(
             children: [
-              Icon(type.icon, color: Colors.white, size: 20),
+              Icon(type.icon, color: foregroundColor, size: 20),
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
                   message,
-                  style: const TextStyle(
-                    color: Colors.white,
+                  style: textTheme.bodyMedium?.copyWith(
+                    color: foregroundColor,
                     fontWeight: FontWeight.w500,
                   ),
                 ),

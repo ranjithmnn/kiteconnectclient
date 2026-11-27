@@ -10,12 +10,12 @@ class ProfileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final surface = theme.colorScheme.surface;
+    final colorScheme = ColorScheme.of(context);
+    final textTheme = TextTheme.of(context);
 
     return Container(
       decoration: BoxDecoration(
-        color: surface,
+        color: colorScheme.surfaceContainerLow,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: SafeArea(
@@ -40,7 +40,9 @@ class ProfileView extends StatelessWidget {
                           Text(
                             message,
                             textAlign: TextAlign.center,
-                            style: theme.textTheme.bodyMedium,
+                            style: textTheme.bodyMedium?.copyWith(
+                              color: colorScheme.onSurface,
+                            ),
                           ),
                           const SizedBox(height: 12),
                           FilledButton(
@@ -73,8 +75,9 @@ class _ProfileSnapshot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final muted = theme.colorScheme.onSurfaceVariant;
+    final colorScheme = ColorScheme.of(context);
+    final textTheme = TextTheme.of(context);
+    final muted = colorScheme.onSurfaceVariant;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -92,7 +95,8 @@ class _ProfileSnapshot extends StatelessWidget {
                     profile.userName.isNotEmpty
                         ? profile.userName
                         : profile.userShortname,
-                    style: theme.textTheme.titleMedium?.copyWith(
+                    style: textTheme.titleMedium?.copyWith(
+                      color: colorScheme.onSurface,
                       fontWeight: FontWeight.w700,
                     ),
                     maxLines: 1,
@@ -102,7 +106,7 @@ class _ProfileSnapshot extends StatelessWidget {
                     const SizedBox(height: 2),
                     Text(
                       profile.email,
-                      style: theme.textTheme.bodySmall?.copyWith(color: muted),
+                      style: textTheme.bodySmall?.copyWith(color: muted),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -125,13 +129,17 @@ class _LargeAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final colorScheme = ColorScheme.of(context);
     final url = avatarUrl;
 
     Widget fallback() => CircleAvatar(
       radius: 26,
-      backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.12),
-      child: Icon(Icons.person, size: 26, color: theme.colorScheme.primary),
+      backgroundColor: colorScheme.primaryContainer,
+      child: Icon(
+        Icons.person,
+        size: 26,
+        color: colorScheme.onPrimaryContainer,
+      ),
     );
 
     if (url == null || url.isEmpty) {
@@ -159,21 +167,23 @@ class _InfoColumn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final colorScheme = ColorScheme.of(context);
+    final textTheme = TextTheme.of(context);
     return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             label,
-            style: theme.textTheme.labelSmall?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
+            style: textTheme.labelSmall?.copyWith(
+              color: colorScheme.onSurfaceVariant,
             ),
           ),
           const SizedBox(height: 3),
           Text(
             value.isEmpty ? '-' : value,
-            style: theme.textTheme.bodySmall?.copyWith(
+            style: textTheme.bodySmall?.copyWith(
+              color: colorScheme.onSurface,
               fontWeight: FontWeight.w600,
             ),
             maxLines: 1,
@@ -193,14 +203,15 @@ class _TagSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final colorScheme = ColorScheme.of(context);
+    final textTheme = TextTheme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
-          style: theme.textTheme.labelSmall?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
+          style: textTheme.labelSmall?.copyWith(
+            color: colorScheme.onSurfaceVariant,
           ),
         ),
         const SizedBox(height: 6),
@@ -215,12 +226,14 @@ class _TagSection extends StatelessWidget {
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
+                    color: colorScheme.secondaryContainer,
                     borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: theme.colorScheme.outlineVariant),
+                    border: Border.all(color: colorScheme.outlineVariant),
                   ),
                   child: Text(
                     item,
-                    style: theme.textTheme.labelSmall?.copyWith(
+                    style: textTheme.labelSmall?.copyWith(
+                      color: colorScheme.onSecondaryContainer,
                       fontWeight: FontWeight.w500,
                     ),
                   ),

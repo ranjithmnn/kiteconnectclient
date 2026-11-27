@@ -1,0 +1,37 @@
+import 'package:cupertino_ui/cupertino_ui.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:material_ui/material_ui.dart';
+
+const PageTransitionsTheme _pageTransitionsTheme = PageTransitionsTheme(
+  builders: {
+    .android: FadeForwardsPageTransitionsBuilder(),
+    .iOS: CupertinoPageTransitionsBuilder(),
+  },
+);
+
+abstract final class MaterialThemes {
+  static ThemeData get light => _theme(.light);
+
+  static ThemeData get dark => _theme(.dark);
+
+  // GoogleFonts.googleSansTextTheme() without a base bakes in light-theme
+  // text colors, breaking dark mode; derive it from the brightness-correct
+  // base theme instead.
+  static ThemeData _theme(Brightness brightness) {
+    final ThemeData base = ThemeData(
+      colorSchemeSeed: Colors.primaries.elementAt(12),
+      brightness: brightness,
+    );
+
+    return base.copyWith(
+      textTheme: GoogleFonts.googleSansTextTheme(base.textTheme),
+      pageTransitionsTheme: _pageTransitionsTheme,
+    );
+  }
+}
+
+extension MaterialThemeX on BuildContext {
+  ThemeData get theme => Theme.of(this);
+  ColorScheme get colorScheme => ColorScheme.of(this);
+  TextTheme get textTheme => TextTheme.of(this);
+}

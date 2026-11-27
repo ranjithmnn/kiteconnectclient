@@ -69,7 +69,8 @@ class _HeaderSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final colorScheme = ColorScheme.of(context);
+    final textTheme = TextTheme.of(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -78,7 +79,8 @@ class _HeaderSection extends StatelessWidget {
         const SizedBox(height: 28),
         Text(
           "Sign in to Kite",
-          style: theme.textTheme.headlineMedium?.copyWith(
+          style: textTheme.headlineMedium?.copyWith(
+            color: colorScheme.onSurface,
             fontWeight: FontWeight.w700,
             letterSpacing: -0.5,
           ),
@@ -86,8 +88,8 @@ class _HeaderSection extends StatelessWidget {
         const SizedBox(height: 8),
         Text(
           "Access your Zerodha portfolio, live market feeds, and instant order execution.",
-          style: theme.textTheme.bodyMedium?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
+          style: textTheme.bodyMedium?.copyWith(
+            color: colorScheme.onSurfaceVariant,
             height: 1.5,
           ),
         ),
@@ -101,8 +103,9 @@ class _FooterSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final muted = theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.65);
+    final colorScheme = ColorScheme.of(context);
+    final textTheme = TextTheme.of(context);
+    final muted = colorScheme.outline;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -114,7 +117,7 @@ class _FooterSection extends StatelessWidget {
             const SizedBox(width: 5),
             Text(
               "Secured by Zerodha Kite Connect",
-              style: theme.textTheme.labelSmall?.copyWith(color: muted),
+              style: textTheme.labelSmall?.copyWith(color: muted),
             ),
           ],
         ),

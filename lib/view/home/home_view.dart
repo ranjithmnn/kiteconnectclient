@@ -40,10 +40,14 @@ class HomeView extends StatelessWidget {
   );
 
   void _handleProfileClick(BuildContext context) {
-    final height = MediaQuery.of(context).size.height * 0.5;
+    final height = MediaQuery.sizeOf(context).height * 0.5;
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      backgroundColor: ColorScheme.of(context).surfaceContainerLow,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
       constraints: BoxConstraints(minHeight: height, maxHeight: height),
       builder: (_) => const ProfileView(),
     );
@@ -57,9 +61,10 @@ class _ProfileAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final iconColor = ColorScheme.of(context).onSurfaceVariant;
     final url = avatarUrl;
     if (url == null || url.isEmpty) {
-      return const Icon(Icons.person);
+      return Icon(Icons.person, color: iconColor);
     }
 
     return ClipOval(
@@ -68,8 +73,8 @@ class _ProfileAvatar extends StatelessWidget {
         width: 30,
         height: 30,
         fit: BoxFit.cover,
-        placeholder: (_, _) => const Icon(Icons.person),
-        errorWidget: (_, _, _) => const Icon(Icons.person),
+        placeholder: (_, _) => Icon(Icons.person, color: iconColor),
+        errorWidget: (_, _, _) => Icon(Icons.person, color: iconColor),
       ),
     );
   }

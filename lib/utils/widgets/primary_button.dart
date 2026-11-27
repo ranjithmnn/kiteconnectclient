@@ -5,7 +5,8 @@ class PrimaryButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final bool isLoading;
 
-  const PrimaryButton({super.key, 
+  const PrimaryButton({
+    super.key,
     required this.label,
     required this.onPressed,
     this.isLoading = false,
@@ -13,6 +14,12 @@ class PrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = ColorScheme.of(context);
+    final textTheme = TextTheme.of(context);
+    final indicatorColor = onPressed == null
+        ? colorScheme.onSurfaceVariant
+        : colorScheme.onPrimary;
+
     return SizedBox(
       width: double.infinity,
       height: 52,
@@ -22,6 +29,9 @@ class PrimaryButton extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
+          textStyle: textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
         ),
         child: isLoading
             ? SizedBox(
@@ -29,16 +39,10 @@ class PrimaryButton extends StatelessWidget {
                 width: 20,
                 child: CircularProgressIndicator(
                   strokeWidth: 2.2,
-                  color: Theme.of(context).colorScheme.onPrimary,
+                  color: indicatorColor,
                 ),
               )
-            : Text(
-                label,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+            : Text(label),
       ),
     );
   }

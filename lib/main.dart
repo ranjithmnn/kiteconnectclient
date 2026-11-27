@@ -1,15 +1,17 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:kiteconnectclient/services/navigation_service.dart';
-import 'package:kiteconnectclient/utils/theme/app_theme.dart';
+import 'package:kiteconnectclient/utils/theme/material_themes.dart';
 import 'package:kiteconnectclient/view/auth/login_view.dart';
 import 'package:kiteconnectclient/view/home/bloc/home_bloc.dart';
 import 'package:kiteconnectclient/view/home/home_view.dart';
 import 'package:material_ui/material_ui.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await dotenv.load();
   const storage = FlutterSecureStorage();
   final accessToken = await storage.read(key: 'access_token');
@@ -22,6 +24,7 @@ Future<void> main() async {
       (state) => state is HomeLoaded || state is HomeError,
     );
   }
+  FlutterNativeSplash.remove();
 
   runApp(
     BlocProvider<HomeBloc>.value(
@@ -40,9 +43,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       navigatorKey: appNavigatorKey,
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.light,
-      darkTheme: AppTheme.dark,
-      themeMode: ThemeMode.system,
+      theme: MaterialThemes.light,
+      darkTheme: MaterialThemes.dark,
+      themeMode: .system,
       home: hasValidSession ? const HomeView() : const LoginView(),
     );
   }
