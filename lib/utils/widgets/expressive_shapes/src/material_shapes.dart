@@ -1,7 +1,7 @@
 import 'dart:collection';
 import 'dart:math' as math;
 
-import 'package:expressive_shapes/src/shapes/shapes.dart';
+import 'shapes/shapes.dart';
 import 'package:vector_math/vector_math_64.dart';
 
 /// Holds predefined Material Design shapes as [RoundedPolygon]s that can be
@@ -85,7 +85,7 @@ abstract final class MaterialShapes {
       .transformed(
         (Matrix4.identity()
               ..rotateZ(_negative45Radians)
-              ..scale(1.0, 0.64))
+              ..scaleByDouble(1.0, 0.64, 1.0, 1.0))
             .asPointTransformer(),
       )
       .normalized();
@@ -476,7 +476,8 @@ abstract final class MaterialShapes {
     mirroring: true,
   )
       .transformed(
-        (Matrix4.identity()..scale(1.0, 0.742)).asPointTransformer(),
+        (Matrix4.identity()..scaleByDouble(1.0, 0.742, 1.0, 1.0))
+            .asPointTransformer(),
       )
       .normalized();
 

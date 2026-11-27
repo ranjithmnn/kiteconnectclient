@@ -2,7 +2,7 @@ import 'dart:ui' as ui show lerpDouble;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
-import 'package:expressive_shapes/expressive_shapes.dart';
+import '../expressive_shapes.dart';
 
 import 'package:vector_math/vector_math_64.dart' show Matrix4;
 
@@ -19,11 +19,10 @@ class MaterialShapeBorder extends OutlinedBorder {
         assert(squash >= 0 && squash <= 1, 'squash has to be in range [0, 1]');
 
   const MaterialShapeBorder._fromCubics({
-    required List<Cubic> cubics,
+    required this._cubics,
     super.side,
     this.squash = 0,
   })  : shape = null,
-        _cubics = cubics,
         assert(squash >= 0 && squash <= 1, 'squash has to be in range [0, 1]');
 
   /// The shape this border represents.
@@ -184,8 +183,8 @@ class MaterialShapeBorder extends OutlinedBorder {
         Size(scale.dx, scale.dy);
 
     final matrix = Matrix4.identity()
-      ..translate(actualRect.left, actualRect.top)
-      ..scale(scale.dx, scale.dy);
+      ..translateByDouble(actualRect.left, actualRect.top, 0.0, 1.0)
+      ..scaleByDouble(scale.dx, scale.dy, 1.0, 1.0);
 
     return pathFromCubics(
       path: Path(),

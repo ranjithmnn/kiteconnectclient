@@ -1,4 +1,4 @@
-import 'package:expressive_loading_indicator/expressive_loading_indicator.dart';
+import 'package:kiteconnectclient/utils/widgets/expressive_loading_indicator/expressive_loading_indicator.dart';
 import 'package:material_ui/material_ui.dart';
 
 class PrimaryButton extends StatelessWidget {
@@ -30,9 +30,7 @@ class PrimaryButton extends StatelessWidget {
             fontWeight: FontWeight.w600,
           ),
         ),
-        child: isLoading
-            ? LoadingIndicator()
-            : Text(label),
+        child: isLoading ? LoadingIndicator() : Text(label),
       ),
     );
   }

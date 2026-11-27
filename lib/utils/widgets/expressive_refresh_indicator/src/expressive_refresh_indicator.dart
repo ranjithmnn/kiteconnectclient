@@ -4,7 +4,7 @@
 import 'dart:async';
 import 'dart:math' as math;
 
-import 'package:expressive_loading_indicator/expressive_loading_indicator.dart';
+import 'package:kiteconnectclient/utils/widgets/expressive_loading_indicator/expressive_loading_indicator.dart';
 import 'package:flutter/foundation.dart' show clampDouble;
 import 'package:material_ui/material_ui.dart';
 import 'package:motor/motor.dart';
