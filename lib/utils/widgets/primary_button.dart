@@ -1,3 +1,4 @@
+import 'package:expressive_loading_indicator/expressive_loading_indicator.dart';
 import 'package:material_ui/material_ui.dart';
 
 class PrimaryButton extends StatelessWidget {
@@ -34,14 +35,7 @@ class PrimaryButton extends StatelessWidget {
           ),
         ),
         child: isLoading
-            ? SizedBox(
-                height: 20,
-                width: 20,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2.2,
-                  color: indicatorColor,
-                ),
-              )
+            ? LoadingIndicator()
             : Text(label),
       ),
     );

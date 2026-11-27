@@ -6,6 +6,5 @@ class DialogUtil {
     String title,
     String message,
   ) {
-
   }
 }

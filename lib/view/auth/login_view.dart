@@ -1,3 +1,4 @@
+import 'package:expressive_snack/expressive_snack.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiteconnectclient/utils/widgets/dialog.dart';
 import 'package:kiteconnectclient/utils/widgets/primary_button.dart';
@@ -39,7 +40,7 @@ class LoginView extends StatelessWidget {
       child: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthError) {
-            DialogUtil.showSimpleDialog(context, "Error", state.message);
+            showExpressiveSnack(context: context, message: state.message, icon: Icons.key);
           } else if (state is AuthSuccess) {
             context.read<HomeBloc>().add(const HomeProfileRequested());
             Navigator.of(context).pushReplacement(
