@@ -161,6 +161,49 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.2"
+  equatable:
+    dependency: transitive
+    description:
+      name: equatable
+      sha256: "3bce007a596ff8b3119c45d68aaef631272537c03d30e5d4534dd24bf4c5eaa2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0"
+  expressive_loading_indicator:
+    dependency: "direct main"
+    description:
+      path: "packages/expressive_loading_indicator"
+      relative: true
+    source: path
+    version: "1.0.0"
+  expressive_refresh_indicator:
+    dependency: "direct main"
+    description:
+      path: "packages/expressive_refresh_indicator"
+      relative: true
+    source: path
+    version: "1.0.0"
+  expressive_shapes:
+    dependency: "direct main"
+    description:
+      path: "packages/expressive_shapes"
+      relative: true
+    source: path
+    version: "1.0.0"
+  expressive_sheet:
+    dependency: "direct main"
+    description:
+      path: "packages/expressive_sheet"
+      relative: true
+    source: path
+    version: "1.0.0"
+  expressive_snack:
+    dependency: "direct main"
+    description:
+      path: "packages/expressive_snack"
+      relative: true
+    source: path
+    version: "1.0.0"
   fake_async:
     dependency: transitive
     description:
@@ -461,6 +504,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.11.1"
+  material_wavy_progress_indicator:
+    dependency: "direct main"
+    description:
+      path: "packages/material_wavy_progress_indicator"
+      relative: true
+    source: path
+    version: "1.0.0"
   meta:
     dependency: transitive
     description:
@@ -477,6 +527,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
+  motor:
+    dependency: transitive
+    description:
+      name: motor
+      sha256: cbd49f21b00e568c2b1a55f134ed803614a107782f4fea7769693bca32940c58
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
   nested:
     dependency: transitive
     description:

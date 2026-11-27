@@ -46,6 +46,18 @@ dependencies:
   crypto: ^3.0.8
   cached_network_image: ^4.0.7
   flutter_native_splash: ^2.4.8
+  expressive_sheet:
+    path: packages/expressive_sheet
+  expressive_snack:
+    path: packages/expressive_snack
+  expressive_loading_indicator:
+    path: packages/expressive_loading_indicator
+  expressive_refresh_indicator:
+    path: packages/expressive_refresh_indicator
+  expressive_shapes:
+    path: packages/expressive_shapes
+  material_wavy_progress_indicator:
+    path: packages/material_wavy_progress_indicator
 
 dev_dependencies:
   flutter_test:

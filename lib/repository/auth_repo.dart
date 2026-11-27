@@ -21,6 +21,10 @@ class AuthRepository {
     final String apiKey = dotenv.get('API_KEY');
     final String apiSecret = dotenv.get('API_SECRET');
 
+    if (apiKey.isEmpty || apiSecret.isEmpty) {
+      throw const ApiException("Please configure API Key and API Secret in the .env file");
+    }
+
     final result = await WebViewBottomSheet.show(
       context,
       url: '${Endpoints.loginUrl}?v=3&api_key=$apiKey',
