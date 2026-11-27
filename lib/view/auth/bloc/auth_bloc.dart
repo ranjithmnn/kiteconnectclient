@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiteconnectclient/repository/auth_repo.dart';
 import 'package:kiteconnectclient/services/remote/dio.dart';
+import 'package:material_ui/material_ui.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
