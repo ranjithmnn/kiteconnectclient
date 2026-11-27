@@ -20,9 +20,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) async {
     emit(const AuthLoading());
-    await Future.delayed(const Duration(seconds: 2));
-    emit(const AuthFail());
-    return;
+    // await Future.delayed(const Duration(seconds: 2));
+    // emit(const AuthError("Error"));
+    // return;
     try {
       final completed = await _authRepository.login(event.context);
       if (!completed) {

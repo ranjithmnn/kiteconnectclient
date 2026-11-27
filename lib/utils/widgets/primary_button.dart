@@ -15,11 +15,7 @@ class PrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = ColorScheme.of(context);
     final textTheme = TextTheme.of(context);
-    final indicatorColor = onPressed == null
-        ? colorScheme.onSurfaceVariant
-        : colorScheme.onPrimary;
 
     return SizedBox(
       width: double.infinity,

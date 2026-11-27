@@ -1,6 +1,5 @@
 import 'package:expressive_snack/expressive_snack.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kiteconnectclient/utils/widgets/dialog.dart';
 import 'package:kiteconnectclient/utils/widgets/primary_button.dart';
 import 'package:kiteconnectclient/view/auth/bloc/auth_bloc.dart';
 import 'package:kiteconnectclient/view/home/bloc/home_bloc.dart';

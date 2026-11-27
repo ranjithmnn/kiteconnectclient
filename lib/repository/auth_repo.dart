@@ -18,21 +18,28 @@ class AuthRepository {
   final FlutterSecureStorage _storage;
 
   Future<bool> login(BuildContext context) async {
-    final String apiKey = dotenv.get('API_KEY');
-    final String apiSecret = dotenv.get('API_SECRET');
+    final String apiKey = (dotenv.maybeGet('API_KEY') ?? '').trim();
+    final String apiSecret = (dotenv.maybeGet('API_SECRET') ?? '').trim();
 
     if (apiKey.isEmpty || apiSecret.isEmpty) {
-      throw const ApiException("Please configure API Key and API Secret in the .env file");
+      throw const ApiException(
+        "Please configure API Key and API Secret in the .env file",
+      );
     }
 
-    final result = await WebViewBottomSheet.show(
-      context,
-      url: '${Endpoints.loginUrl}?v=3&api_key=$apiKey',
-      onUrlChange: (url) {
-        debugPrint('URL changed: $url');
-      },
-      shouldClose: (url) => url.startsWith(Endpoints.redirectUrl),
-    );
+    final String? result;
+    try {
+      result = await WebViewBottomSheet.show(
+        context,
+        url: '${Endpoints.loginUrl}?v=3&api_key=$apiKey',
+        onUrlChange: (url) {
+          debugPrint('URL changed: $url');
+        },
+        shouldClose: (url) => url.startsWith(Endpoints.redirectUrl),
+      );
+    } on WebViewLoadException catch (e) {
+      throw ApiException(e.message);
+    }
 
     if (!context.mounted) {
       return false;
