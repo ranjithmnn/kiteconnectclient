@@ -25,7 +25,7 @@ class LoginView extends StatelessWidget {
               _loginBtn(),
               const SizedBox(height: 12),
               const Spacer(flex: 3),
-              const _FooterSection(),
+              const FooterSection(),
             ],
           ),
         ),
@@ -103,8 +103,8 @@ class _HeaderSection extends StatelessWidget {
   }
 }
 
-class _FooterSection extends StatelessWidget {
-  const _FooterSection();
+class FooterSection extends StatelessWidget {
+  const FooterSection({super.key});
 
   @override
   Widget build(BuildContext context) {

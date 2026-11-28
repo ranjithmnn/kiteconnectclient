@@ -37,6 +37,7 @@ class ExpressiveDialogButton {
     this.role = ExpressiveDialogButtonRole.secondary,
     this.icon,
     this.dismissOnPressed = true,
+    this.enableHaptics = true,
   });
 
   /// Visible text on the action pill.
@@ -54,5 +55,9 @@ class ExpressiveDialogButton {
   /// Whether tapping this button automatically plays the dialog's exit
   /// animation and dismisses it. Defaults to `true`.
   final bool dismissOnPressed;
+
+  /// Whether tapping this button triggers role-aware [MicroHaptics] feedback.
+  /// Defaults to `true`.
+  final bool enableHaptics;
 }
 

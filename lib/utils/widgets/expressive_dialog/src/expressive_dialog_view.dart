@@ -1,4 +1,6 @@
-import 'package:flutter/services.dart';
+import 'dart:async';
+
+import 'package:kiteconnectclient/utils/haptics/mico_haptics.dart';
 import 'package:kiteconnectclient/utils/widgets/expressive_shapes/expressive_shapes.dart';
 import 'package:material_ui/material_ui.dart'
     hide MaterialShapes, MaterialShapeBorder, RoundedPolygon, CornerRounding;
@@ -44,14 +46,32 @@ class ExpressiveDialog extends StatelessWidget {
   final ValueChanged<ExpressiveDialogButton>? onButtonPressed;
 
   void _handleTap(ExpressiveDialogButton button) {
-    if (button.role.isDestructive) {
-      HapticFeedback.mediumImpact();
+    if (button.enableHaptics) {
+      unawaited(_triggerButtonHaptic(button.role));
     }
     if (onButtonPressed != null) {
       onButtonPressed!(button);
     } else {
       button.onPressed?.call();
     }
+  }
+
+  Future<void> _triggerButtonHaptic(ExpressiveDialogButtonRole role) {
+    return switch (role) {
+      ExpressiveDialogButtonRole.destructive => MicroHaptics.warning(),
+      ExpressiveDialogButtonRole.destructiveTonal => MicroHaptics.microTick(
+        intensity: 0.7,
+      ),
+      ExpressiveDialogButtonRole.primary => MicroHaptics.microTick(
+        intensity: 0.55,
+      ),
+      ExpressiveDialogButtonRole.secondary => MicroHaptics.microTick(
+        intensity: 0.45,
+      ),
+      ExpressiveDialogButtonRole.text => MicroHaptics.microTick(
+        intensity: 0.35,
+      ),
+    };
   }
 
   @override

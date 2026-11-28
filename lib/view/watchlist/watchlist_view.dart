@@ -157,7 +157,7 @@ class _WatchlistSelectorStrip extends StatelessWidget {
         itemCount: watchlists.length + 1,
         separatorBuilder: (_, _) => const SizedBox(width: 8),
         itemBuilder: (context, index) {
-          if (index == watchlists.length) {
+          if (index == 0) {
             return Material(
               color: cs.primaryContainer.withValues(alpha: 0.65),
               shape: const StadiumBorder(),
@@ -190,7 +190,7 @@ class _WatchlistSelectorStrip extends StatelessWidget {
             );
           }
 
-          final wl = watchlists[index];
+          final wl = watchlists[index - 1];
           final isSelected = wl.id == selectedId;
 
           return SingleMotionBuilder(
@@ -411,15 +411,6 @@ class _EmptyWatchlistState extends StatelessWidget {
                 fontWeight: FontWeight.w700,
               ),
             ),
-            const SizedBox(height: 6),
-            Text(
-              'Search from 100,000+ indexed equities, indices, futures & options to build your watchlist.',
-              textAlign: TextAlign.center,
-              style: tt.bodySmall?.copyWith(
-                color: cs.onSurfaceVariant,
-                height: 1.45,
-              ),
-            ),
             const SizedBox(height: 20),
             FilledButton.icon(
               onPressed: onAddTap,
@@ -487,7 +478,7 @@ class _WatchlistInstrumentTile extends StatelessWidget {
       },
       child: InkWell(
         borderRadius: BorderRadius.circular(14),
-        onTap: () => showWatchlistPickerSheet(context, instrument: instrument),
+        onTap: () {},
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 13),
           child: Row(

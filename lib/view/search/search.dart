@@ -595,7 +595,7 @@ class _InitialSyncProgressView extends StatelessWidget {
             Text(
               isDownloading
                   ? 'Downloading instruments…'
-                  : 'Indexing 100,000+ instruments…',
+                  : 'Indexing instruments…',
               textAlign: TextAlign.center,
               style: tt.titleMedium?.copyWith(
                 color: cs.onSurface,

@@ -94,9 +94,7 @@ class _ExpressiveNavBarState extends State<ExpressiveNavBar> {
   }
 
   void _handleItemTap(int index) {
-    if (widget.enableHaptics && index != widget.currentIndex) {
-      unawaited(MicroHaptics.microTick());
-    }
+    unawaited(MicroHaptics.microTick());
     widget.onTap(index);
   }
 
