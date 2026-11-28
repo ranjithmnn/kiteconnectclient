@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -7,6 +9,20 @@ import 'package:kiteconnectclient/view/auth/login_view.dart';
 import 'package:material_ui/material_ui.dart';
 
 enum HttpMethod { get, post, put, delete, patch }
+
+class DownloadResult {
+  final int statusCode;
+  final String? etag;
+  final String? lastModified;
+  final bool notModified;
+
+  const DownloadResult({
+    required this.statusCode,
+    this.etag,
+    this.lastModified,
+    this.notModified = false,
+  });
+}
 
 class ApiException implements Exception {
   final String message;
@@ -161,6 +177,105 @@ class DioClient {
         _extractErrorMessage(e),
         statusCode: e.response?.statusCode,
       );
+    }
+  }
+
+  /// Streams a binary/CSV resource directly to [savePath] with optional
+  /// HTTP conditional caching headers (`If-None-Match` / `If-Modified-Since`).
+  ///
+  /// When the server responds with `304 Not Modified`, [savePath] is untouched
+  /// and [DownloadResult.notModified] is `true`.
+  Future<DownloadResult> downloadToFile(
+    String path, {
+    required String savePath,
+    String? ifNoneMatch,
+    String? ifModifiedSince,
+    bool requiresAuth = true,
+    Duration receiveTimeout = const Duration(seconds: 60),
+    void Function(int received, int total)? onProgress,
+  }) async {
+    final headers = <String, dynamic>{
+      if (ifNoneMatch != null && ifNoneMatch.isNotEmpty)
+        'If-None-Match': ifNoneMatch,
+      if (ifModifiedSince != null && ifModifiedSince.isNotEmpty)
+        'If-Modified-Since': ifModifiedSince,
+    };
+
+    final tempFile = File(savePath);
+    IOSink? sink;
+
+    try {
+      final response = await _dio.get<ResponseBody>(
+        path,
+        options: Options(
+          responseType: ResponseType.stream,
+          receiveTimeout: receiveTimeout,
+          headers: headers.isEmpty ? null : headers,
+          extra: {'requiresAuth': requiresAuth},
+          validateStatus: (status) =>
+              status == 304 || (status != null && status >= 200 && status < 300),
+        ),
+      );
+
+      final statusCode = response.statusCode ?? 0;
+      final etag = response.headers.value('etag');
+      final lastModified = response.headers.value('last-modified');
+
+      if (statusCode == 304) {
+        return DownloadResult(
+          statusCode: 304,
+          etag: etag ?? ifNoneMatch,
+          lastModified: lastModified ?? ifModifiedSince,
+          notModified: true,
+        );
+      }
+
+      final body = response.data;
+      if (body == null) {
+        throw ApiException(
+          'Empty stream response from server.',
+          statusCode: statusCode,
+        );
+      }
+
+      await tempFile.parent.create(recursive: true);
+      sink = tempFile.openWrite();
+      final totalBytes =
+          int.tryParse(response.headers.value(Headers.contentLengthHeader) ?? '') ??
+          -1;
+      int receivedBytes = 0;
+
+      await for (final chunk in body.stream) {
+        sink.add(chunk);
+        receivedBytes += chunk.length;
+        onProgress?.call(receivedBytes, totalBytes);
+      }
+
+      await sink.flush();
+      await sink.close();
+      sink = null;
+
+      return DownloadResult(
+        statusCode: statusCode,
+        etag: etag,
+        lastModified: lastModified,
+      );
+    } on DioException catch (e) {
+      await sink?.close();
+      if (await tempFile.exists()) {
+        await tempFile.delete();
+      }
+      throw ApiException(
+        _extractErrorMessage(e),
+        statusCode: e.response?.statusCode,
+      );
+    } catch (e) {
+      await sink?.close();
+      if (await tempFile.exists()) {
+        await tempFile.delete();
+      }
+      if (e is ApiException) rethrow;
+      throw ApiException(e.toString());
     }
   }
 

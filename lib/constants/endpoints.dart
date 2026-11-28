@@ -4,4 +4,6 @@ class Endpoints {
   static const String redirectUrl = "https://localhost";
   static const String sessionToken = "$baseUrl/session/token";
   static const String userProfile = "$baseUrl/user/profile";
+  static const String instruments = "$baseUrl/instruments";
 }
+

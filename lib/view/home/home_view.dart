@@ -1,10 +1,17 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:kiteconnectclient/services/instrument_sync_service.dart';
 import 'package:kiteconnectclient/utils/widgets/expressive_nav_bar/expressive_nav_bar.dart';
 import 'package:kiteconnectclient/view/home/bloc/home_bloc.dart';
 import 'package:kiteconnectclient/view/home/widgets/profile_sheet.dart';
+import 'package:kiteconnectclient/view/ipo/ipo_view.dart';
+import 'package:kiteconnectclient/view/mf/mf_view.dart';
+import 'package:kiteconnectclient/view/orders/orders_view.dart';
 import 'package:kiteconnectclient/view/search/search.dart';
+import 'package:kiteconnectclient/view/watchlist/watchlist_view.dart';
 import 'package:material_ui/material_ui.dart';
 
 class HomeView extends StatefulWidget {
@@ -16,6 +23,13 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   int _selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    // Kick off non-blocking daily instrument CSV sync & 08:35 AM IST timer.
+    unawaited(InstrumentSyncService.instance.initialize());
+  }
 
   static const List<ExpressiveNavItem> _navItems = [
     ExpressiveNavItem(
@@ -40,6 +54,13 @@ class _HomeViewState extends State<HomeView> {
     ),
   ];
 
+  static const List<Widget> _pages = [
+    WatchlistView(),
+    OrdersView(),
+    MfView(),
+    IpoView(),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,17 +75,7 @@ class _HomeViewState extends State<HomeView> {
               Expanded(
                 child: IndexedStack(
                   index: _selectedIndex,
-                  children: [
-                    for (final item in _navItems)
-                      Center(
-                        child: Text(
-                          item.label,
-                          style: TextTheme.of(context).titleMedium?.copyWith(
-                            color: ColorScheme.of(context).onSurfaceVariant,
-                          ),
-                        ),
-                      ),
-                  ],
+                  children: _pages,
                 ),
               ),
             ],
@@ -79,7 +90,9 @@ class _HomeViewState extends State<HomeView> {
           icon: Icons.search_rounded,
           tooltip: 'Search instruments',
           onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => SearchView()));
+            Navigator.of(
+              context,
+            ).push(MaterialPageRoute(builder: (_) => const SearchView()));
           },
         ),
       ),

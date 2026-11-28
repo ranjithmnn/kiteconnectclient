@@ -7,6 +7,7 @@ import 'package:kiteconnectclient/utils/theme/material_themes.dart';
 import 'package:kiteconnectclient/view/auth/login_view.dart';
 import 'package:kiteconnectclient/view/home/bloc/home_bloc.dart';
 import 'package:kiteconnectclient/view/home/home_view.dart';
+import 'package:kiteconnectclient/view/watchlist/bloc/watchlist_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 
 Future<void> main() async {
@@ -27,8 +28,13 @@ Future<void> main() async {
   FlutterNativeSplash.remove();
 
   runApp(
-    BlocProvider<HomeBloc>.value(
-      value: homeBloc,
+    MultiBlocProvider(
+      providers: [
+        BlocProvider<HomeBloc>.value(value: homeBloc),
+        BlocProvider<WatchlistBloc>(
+          create: (_) => WatchlistBloc()..add(const WatchlistStarted()),
+        ),
+      ],
       child: MyApp(hasValidSession: hasToken),
     ),
   );

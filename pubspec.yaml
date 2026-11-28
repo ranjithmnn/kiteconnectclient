@@ -49,6 +49,9 @@ dependencies:
   motor: ^1.1.0
   meta: ^1.15.0
   vector_math: ^2.1.4
+  sqflite: ^2.4.6
+  path: ^1.9.1
+  path_provider: ^2.1.6
 
 dev_dependencies:
   flutter_test:
