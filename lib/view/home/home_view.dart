@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:kiteconnectclient/services/instrument_sync_service.dart';
+import 'package:kiteconnectclient/utils/haptics/mico_haptics.dart';
 import 'package:kiteconnectclient/utils/widgets/expressive_nav_bar/expressive_nav_bar.dart';
 import 'package:kiteconnectclient/view/home/bloc/home_bloc.dart';
 import 'package:kiteconnectclient/view/home/widgets/profile_sheet.dart';
@@ -131,6 +132,7 @@ class _HomeViewState extends State<HomeView> {
   );
 
   void _handleProfileClick(BuildContext context) {
+    MicroHaptics.microTick();
     final height = MediaQuery.sizeOf(context).height * 0.5;
     showModalBottomSheet(
       context: context,
