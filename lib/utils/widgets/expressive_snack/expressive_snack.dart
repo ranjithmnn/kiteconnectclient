@@ -3,3 +3,4 @@
 library;
 
 export 'src/show_expressive_snack.dart' show showExpressiveSnack;
+export 'src/snack.dart' show ExpressiveSnackType;

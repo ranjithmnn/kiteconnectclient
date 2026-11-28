@@ -39,7 +39,12 @@ class LoginView extends StatelessWidget {
       child: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthError) {
-            showExpressiveSnack(context: context, message: state.message, icon: Icons.key);
+            showExpressiveSnack(
+              context: context,
+              message: state.message,
+              type: ExpressiveSnackType.error,
+              icon: Icons.error,
+            );
           } else if (state is AuthSuccess) {
             context.read<HomeBloc>().add(const HomeProfileRequested());
             Navigator.of(context).pushReplacement(

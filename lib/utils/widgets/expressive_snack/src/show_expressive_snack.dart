@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:kiteconnectclient/utils/haptics/mico_haptics.dart';
 import 'package:material_ui/material_ui.dart';
 
 import 'snack.dart';
@@ -10,20 +13,22 @@ import 'snack_view.dart';
 ///
 /// Repeated calls stack like cards. The newest pill lands in front and
 /// older ones move back, peeking out above it, up to three deep. Past that
-/// the oldest one leaves. If [message] and [icon] match a pill already on
-/// screen, no new pill is added. That pill shakes and its countdown
+/// the oldest one leaves. If [message], [type], and [icon] match a pill
+/// already on screen, no new pill is added. That pill shakes and its countdown
 /// restarts. Tap or flick a pill to dismiss it early. Each one dismisses
 /// itself after its [duration].
 ///
-/// Colors and text styles come from the ambient [Theme], following
-/// [SnackBar]: an inverse surface container with body medium text.
+/// Colors and haptics adapt to [type] (`success`, `error`, `warning`, `info`).
 void showExpressiveSnack({
   required BuildContext context,
   required String message,
+  required ExpressiveSnackType type,
   IconData? icon,
   // Spec: snackbars stay visible 4-10 seconds.
   Duration duration = const Duration(seconds: 4),
 }) {
+  unawaited(_triggerHaptic(type));
+
   final OverlayState overlay = Overlay.of(context, rootOverlay: true);
   final List<Snack> alive = SnackOverlay.alive;
 
@@ -31,7 +36,7 @@ void showExpressiveSnack({
   // the front and shakes. The forward slide and the sideways wobble run
   // on separate axes, so together they read as one smooth pull-and-shake.
   for (final Snack snack in alive) {
-    if (snack.message == message && snack.icon == icon) {
+    if (snack.message == message && snack.type == type && snack.icon == icon) {
       SnackOverlay.promote(snack);
       snack.key.currentState?.shake();
       return;
@@ -50,7 +55,16 @@ void showExpressiveSnack({
   }
 
   SnackOverlay.add(
-    Snack(message: message, icon: icon, duration: duration),
+    Snack(message: message, type: type, icon: icon, duration: duration),
     overlay,
   );
+}
+
+Future<void> _triggerHaptic(ExpressiveSnackType type) {
+  return switch (type) {
+    ExpressiveSnackType.success => MicroHaptics.success(),
+    ExpressiveSnackType.error => MicroHaptics.error(),
+    ExpressiveSnackType.warning => MicroHaptics.warning(),
+    ExpressiveSnackType.info => MicroHaptics.info(),
+  };
 }

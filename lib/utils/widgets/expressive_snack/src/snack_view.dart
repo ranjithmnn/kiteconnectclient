@@ -202,8 +202,8 @@ class SnackViewState extends State<SnackView> with TickerProviderStateMixin {
   }
 }
 
-/// The pill itself: an inverse surface stadium with an optional arch
-/// shaped icon chip and the message text.
+/// The pill itself: a semantic tonal stadium colored by [ExpressiveSnackType]
+/// with an optional arch shaped icon chip and the message text.
 class _Pill extends StatelessWidget {
   const _Pill({required this.snack, required this.onTap});
 
@@ -216,6 +216,31 @@ class _Pill extends StatelessWidget {
   static final RoundedPolygon _archLtr = _arch(-math.pi / 2);
   static final RoundedPolygon _archRtl = _arch(math.pi / 2);
 
+  static final ColorScheme _successLight = ColorScheme.fromSeed(
+    seedColor: const Color(0xFF2E7D32),
+    brightness: Brightness.light,
+  );
+  static final ColorScheme _successDark = ColorScheme.fromSeed(
+    seedColor: const Color(0xFF2E7D32),
+    brightness: Brightness.dark,
+  );
+  static final ColorScheme _warningLight = ColorScheme.fromSeed(
+    seedColor: const Color(0xFFEF6C00),
+    brightness: Brightness.light,
+  );
+  static final ColorScheme _warningDark = ColorScheme.fromSeed(
+    seedColor: const Color(0xFFEF6C00),
+    brightness: Brightness.dark,
+  );
+  static final ColorScheme _infoLight = ColorScheme.fromSeed(
+    seedColor: const Color(0xFF1565C0),
+    brightness: Brightness.light,
+  );
+  static final ColorScheme _infoDark = ColorScheme.fromSeed(
+    seedColor: const Color(0xFF1565C0),
+    brightness: Brightness.dark,
+  );
+
   static RoundedPolygon _arch(double rotation) {
     return MaterialShapes.arch
         .transformed(
@@ -224,20 +249,54 @@ class _Pill extends StatelessWidget {
         .normalized();
   }
 
+  ({
+    Color background,
+    Color foreground,
+    Color chipBackground,
+    Color chipForeground,
+  }) _palette(ThemeData theme) {
+    final bool isDark = theme.brightness == Brightness.dark;
+    final ColorScheme semantic = switch (snack.type) {
+      ExpressiveSnackType.success => isDark ? _successDark : _successLight,
+      ExpressiveSnackType.warning => isDark ? _warningDark : _warningLight,
+      ExpressiveSnackType.info => isDark ? _infoDark : _infoLight,
+      ExpressiveSnackType.error => theme.colorScheme,
+    };
+
+    if (snack.type == ExpressiveSnackType.error) {
+      return (
+        background: semantic.errorContainer,
+        foreground: semantic.onErrorContainer,
+        chipBackground: semantic.error,
+        chipForeground: semantic.onError,
+      );
+    }
+
+    return (
+      background: semantic.primaryContainer,
+      foreground: semantic.onPrimaryContainer,
+      chipBackground: semantic.primary,
+      chipForeground: semantic.onPrimary,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final ColorScheme cs = Theme.of(context).colorScheme;
-    final TextTheme tt = Theme.of(context).textTheme;
+    final ThemeData theme = Theme.of(context);
+    final TextTheme tt = theme.textTheme;
+    final palette = _palette(theme);
     final IconData? icon = snack.icon;
     final bool ltr = Directionality.of(context) == TextDirection.ltr;
 
     return Material(
-      color: cs.inverseSurface,
+      color: palette.background,
       shape: const StadiumBorder(),
       clipBehavior: Clip.antiAlias,
       elevation: 6,
       child: InkWell(
         onTap: onTap,
+        splashColor: palette.foreground.withValues(alpha: 0.12),
+        highlightColor: palette.foreground.withValues(alpha: 0.08),
         child: Padding(
           // Both paddings land on the spec's 48dp single line container
           // height: 8dp around the 32dp chip, or 14dp around the 20dp
@@ -253,12 +312,12 @@ class _Pill extends StatelessWidget {
                   width: 32,
                   height: 32,
                   decoration: ShapeDecoration(
-                    color: cs.inversePrimary,
+                    color: palette.chipBackground,
                     shape: MaterialShapeBorder(
                       shape: ltr ? _archLtr : _archRtl,
                     ),
                   ),
-                  child: Icon(icon, size: 18, color: cs.inverseSurface),
+                  child: Icon(icon, size: 18, color: palette.chipForeground),
                 ),
                 const SizedBox(width: 12),
               ],
@@ -270,7 +329,7 @@ class _Pill extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: tt.bodyMedium?.copyWith(
-                      color: cs.onInverseSurface,
+                      color: palette.foreground,
                       fontWeight: FontWeight.w500,
                     ),
                   ),

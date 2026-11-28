@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiteconnectclient/repository/auth_repo.dart';
 import 'package:kiteconnectclient/services/remote/dio.dart';
+import 'package:kiteconnectclient/utils/haptics/mico_haptics.dart';
 import 'package:material_ui/material_ui.dart';
 
 part 'auth_event.dart';
@@ -21,6 +22,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) async {
     emit(const AuthLoading());
+    MicroHaptics.microTick();
     // await Future.delayed(const Duration(seconds: 2));
     // emit(const AuthError("Error"));
     // return;

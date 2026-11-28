@@ -65,6 +65,7 @@ service-account*.json
 **/android/**/gradle-wrapper.jar
 **/android/.gradle/
 .gradle/
+.kotlin/
 **/android/captures/
 **/android/gradlew
 **/android/gradlew.bat
