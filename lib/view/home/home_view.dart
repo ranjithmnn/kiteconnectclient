@@ -86,7 +86,7 @@ class _HomeViewState extends State<HomeView> {
         onTap: (index) => setState(() => _selectedIndex = index),
         action: ExpressiveNavAction(
           icon: Icons.candlestick_chart,
-          tooltip: 'Search instruments',
+          tooltip: 'View Charts',
           onPressed: () {},
         ),
       ),
