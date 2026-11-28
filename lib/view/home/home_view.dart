@@ -74,10 +74,7 @@ class _HomeViewState extends State<HomeView> {
             children: [
               _customHomeAppBar(context),
               Expanded(
-                child: IndexedStack(
-                  index: _selectedIndex,
-                  children: _pages,
-                ),
+                child: IndexedStack(index: _selectedIndex, children: _pages),
               ),
             ],
           ),
@@ -88,20 +85,16 @@ class _HomeViewState extends State<HomeView> {
         items: _navItems,
         onTap: (index) => setState(() => _selectedIndex = index),
         action: ExpressiveNavAction(
-          icon: Icons.search_rounded,
+          icon: Icons.candlestick_chart,
           tooltip: 'Search instruments',
-          onPressed: () {
-            Navigator.of(
-              context,
-            ).push(MaterialPageRoute(builder: (_) => const SearchView()));
-          },
+          onPressed: () {},
         ),
       ),
     );
   }
 
   Widget _customHomeAppBar(BuildContext context) => Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    mainAxisAlignment: MainAxisAlignment.start,
     children: [
       Row(
         children: [
@@ -116,6 +109,16 @@ class _HomeViewState extends State<HomeView> {
             ),
           ),
         ],
+      ),
+      Spacer(),
+      IconButton(
+        onPressed: () {
+          MicroHaptics.microTick();
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (_) => const SearchView()));
+        },
+        tooltip: 'Search',
+        icon: Icon(Icons.search),
       ),
       BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
