@@ -1,21 +1,86 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:kiteconnectclient/utils/widgets/expressive_nav_bar/expressive_nav_bar.dart';
 import 'package:kiteconnectclient/view/home/bloc/home_bloc.dart';
-import 'package:kiteconnectclient/view/home/profile_sheet.dart';
+import 'package:kiteconnectclient/view/home/widgets/profile_sheet.dart';
+import 'package:kiteconnectclient/view/search/search.dart';
 import 'package:material_ui/material_ui.dart';
 
-class HomeView extends StatelessWidget {
+class HomeView extends StatefulWidget {
   const HomeView({super.key});
+
+  @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
+  int _selectedIndex = 0;
+
+  static const List<ExpressiveNavItem> _navItems = [
+    ExpressiveNavItem(
+      icon: Icons.bookmark_border_rounded,
+      selectedIcon: Icons.bookmark_rounded,
+      label: 'Watchlist',
+    ),
+    ExpressiveNavItem(
+      icon: Icons.receipt_long_outlined,
+      selectedIcon: Icons.receipt_long_rounded,
+      label: 'Orders',
+    ),
+    ExpressiveNavItem(
+      icon: Icons.pie_chart_outline_rounded,
+      selectedIcon: Icons.pie_chart_rounded,
+      label: 'MF',
+    ),
+    ExpressiveNavItem(
+      icon: Icons.trending_up_rounded,
+      selectedIcon: Icons.auto_graph_rounded,
+      label: 'IPO',
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       body: SafeArea(
         bottom: false,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: Column(children: [_customHomeAppBar(context)]),
+          child: Column(
+            children: [
+              _customHomeAppBar(context),
+              Expanded(
+                child: IndexedStack(
+                  index: _selectedIndex,
+                  children: [
+                    for (final item in _navItems)
+                      Center(
+                        child: Text(
+                          item.label,
+                          style: TextTheme.of(context).titleMedium?.copyWith(
+                            color: ColorScheme.of(context).onSurfaceVariant,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: ExpressiveNavBar(
+        currentIndex: _selectedIndex,
+        items: _navItems,
+        onTap: (index) => setState(() => _selectedIndex = index),
+        action: ExpressiveNavAction(
+          icon: Icons.search_rounded,
+          tooltip: 'Search instruments',
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => SearchView()));
+          },
         ),
       ),
     );
@@ -27,7 +92,7 @@ class HomeView extends StatelessWidget {
       Row(
         children: [
           SvgPicture.asset('assets/logo/kite.svg', height: 20),
-          SizedBox(width: 8),
+          const SizedBox(width: 8),
           Text(
             'Kite',
             style: TextStyle(
