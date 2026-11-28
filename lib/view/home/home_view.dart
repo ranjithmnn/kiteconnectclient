@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:kiteconnectclient/view/home/bloc/home_bloc.dart';
-import 'package:kiteconnectclient/view/profile/profile_view.dart';
+import 'package:kiteconnectclient/view/home/profile_sheet.dart';
 import 'package:material_ui/material_ui.dart';
 
 class HomeView extends StatelessWidget {
@@ -15,9 +15,7 @@ class HomeView extends StatelessWidget {
         bottom: false,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: Column(
-            children: [_customHomeAppBar(context)],
-          ),
+          child: Column(children: [_customHomeAppBar(context)]),
         ),
       ),
     );
@@ -29,13 +27,22 @@ class HomeView extends StatelessWidget {
       Row(
         children: [
           SvgPicture.asset('assets/logo/kite.svg', height: 20),
-          SizedBox(width: 8,),
-          Text('Kite', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface),)
+          SizedBox(width: 8),
+          Text(
+            'Kite',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
+          ),
         ],
       ),
       BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
-          final avatarUrl = state is HomeLoaded ? state.profile.avatarUrl : null;
+          final avatarUrl = state is HomeLoaded
+              ? state.profile.avatarUrl
+              : null;
           return IconButton(
             onPressed: () => _handleProfileClick(context),
             icon: _ProfileAvatar(avatarUrl: avatarUrl),
@@ -55,7 +62,7 @@ class HomeView extends StatelessWidget {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       constraints: BoxConstraints(minHeight: height, maxHeight: height),
-      builder: (_) => const ProfileView(),
+      builder: (_) => const ProfileSheet(),
     );
   }
 }

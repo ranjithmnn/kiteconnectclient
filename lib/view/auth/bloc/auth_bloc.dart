@@ -13,6 +13,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     : _authRepository = authRepository ?? AuthRepository(),
       super(const AuthInitial()) {
     on<AuthLoginRequested>(_onLoginRequested);
+    on<AuthLogoutRequested>(_onLogoutRequested);
   }
 
   final AuthRepository _authRepository;
@@ -33,6 +34,26 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         return;
       }
       emit(const AuthSuccess());
+    } on ApiException catch (e) {
+      emit(AuthError(e.message));
+    } catch (e) {
+      emit(AuthError(e.toString()));
+    }
+  }
+
+  Future<void> _onLogoutRequested(
+    AuthLogoutRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(const AuthLoading());
+    MicroHaptics.microTick();
+    try {
+      final completed = await _authRepository.logout();
+      if (!completed) {
+        emit(const AuthFail());
+        return;
+      }
+      emit(const AuthLogoutSuccess());
     } on ApiException catch (e) {
       emit(AuthError(e.message));
     } catch (e) {

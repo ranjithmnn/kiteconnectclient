@@ -87,4 +87,43 @@ class AuthRepository {
     await _storage.write(key: 'access_token', value: accessToken);
     return true;
   }
+
+  Future<bool> logout() async {
+    final String apiKey = (dotenv.maybeGet('API_KEY') ?? '').trim();
+
+    if (apiKey.isEmpty) {
+      throw const ApiException(
+        'Please configure API Key in the .env file',
+      );
+    }
+
+    final String? accessToken = await _storage.read(key: 'access_token');
+    if (accessToken == null || accessToken.isEmpty) {
+      await _storage.delete(key: 'access_token');
+      return true;
+    }
+
+    try {
+      final response = await _dioClient.request(
+        Endpoints.sessionToken,
+        method: HttpMethod.delete,
+        queryParameters: {
+          'api_key': apiKey,
+          'access_token': accessToken,
+        },
+        requiresAuth: false,
+      );
+
+      if (response['data'] != true) {
+        throw const ApiException('Failed to logout. Please try again.');
+      }
+    } on ApiException catch (e) {
+      if (e.statusCode != 401 && e.statusCode != 403) {
+        rethrow;
+      }
+    }
+
+    await _storage.delete(key: 'access_token');
+    return true;
+  }
 }

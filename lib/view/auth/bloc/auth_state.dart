@@ -16,6 +16,10 @@ final class AuthSuccess extends AuthState {
   const AuthSuccess();
 }
 
+final class AuthLogoutSuccess extends AuthState {
+  const AuthLogoutSuccess();
+}
+
 final class AuthError extends AuthState {
   final String message;
 

@@ -11,9 +11,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     : _userRepository = userRepository ?? UserRepository(),
       super(const HomeInitial()) {
     on<HomeProfileRequested>(_onProfileRequested);
+    on<HomeReset>(_onReset);
   }
 
   final UserRepository _userRepository;
+
+  void _onReset(HomeReset event, Emitter<HomeState> emit) {
+    emit(const HomeInitial());
+  }
 
   Future<void> _onProfileRequested(
     HomeProfileRequested event,

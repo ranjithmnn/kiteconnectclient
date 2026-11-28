@@ -7,3 +7,8 @@ sealed class HomeEvent {
 final class HomeProfileRequested extends HomeEvent {
   const HomeProfileRequested();
 }
+
+final class HomeReset extends HomeEvent {
+  const HomeReset();
+}
+
